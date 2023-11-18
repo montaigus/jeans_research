@@ -42,7 +42,7 @@ getToken((body) => {
 
 function getModo(callback) {
   const getOption = {
-    uri: "https://api.twitch.tv/helix/moderation/moderators?broadcaster_id=103762288",
+    uri: "https://api.twitch.tv/helix/moderation/moderators?broadcaster_id=990937342",
     method: "GET",
     headers: {
       "Client-ID": "dkli55f6f0gijol1iaiyrhn1b9n3em",
@@ -57,9 +57,25 @@ function getModo(callback) {
   });
 }
 
+function getValidate(callback) {
+  const getOption = {
+    uri: "https://id.twitch.tv/oauth2/validate",
+    method: "GET",
+    headers: {
+      Authorization: "Bearer " + OAuthToken,
+    },
+  };
+  request(getOption, function (error, response, body) {
+    if (error) console.log(error);
+    console.log("paf");
+    console.log(response.statusCode);
+    console.log(JSON.parse(body));
+  });
+}
+
 setTimeout(
   () =>
-    getModo(() => {
+    getValidate(() => {
       "pourt";
     }),
   5000
