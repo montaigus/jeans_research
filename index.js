@@ -15,7 +15,8 @@ await app.listen(port, () => {
 async function main() {
   const token = await getToken();
   getValidate(token);
-  getModo(token);
+  getModo(token, "mezkar");
+  getIdFromPseudo("mezkar", token);
 }
 
 async function getToken() {
@@ -24,6 +25,7 @@ async function getToken() {
       client_id: "dkli55f6f0gijol1iaiyrhn1b9n3em",
       client_secret: "ghpzra5yx9rxfs44xenr8nd6l9brdq",
       grant_type: "client_credentials",
+      scope: "moderation:read",
     }),
     method: "POST",
     headers: {
@@ -42,7 +44,25 @@ async function getToken() {
 
 main();
 
-async function getModo(token) {
+async function getIdFromPseudo(pseudo, token) {
+  const clientServerOptions = {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + token,
+      "Client-ID": "dkli55f6f0gijol1iaiyrhn1b9n3em",
+    },
+  };
+  const request = new Request(
+    `https://api.twitch.tv/helix/users?login=${pseudo}`,
+    clientServerOptions
+  );
+  const res = await fetch(request);
+  const data = await res.json();
+  return data.id;
+}
+
+async function getModo(token, pseudo) {
   const getOption = {
     method: "GET",
     headers: {
@@ -50,8 +70,10 @@ async function getModo(token) {
       Authorization: "Bearer " + token,
     },
   };
+  const broadcaster_id = await getIdFromPseudo(pseudo, token);
   const request = new Request(
-    "https://api.twitch.tv/helix/moderation/moderators?broadcaster_id=990937342",
+    "https://api.twitch.tv/helix/moderation/moderators?broadcaster_id=" +
+      broadcaster_id,
     getOption
   );
 
@@ -79,11 +101,3 @@ async function getValidate(token) {
 
   console.log(data);
 }
-
-// setTimeout(
-//   () =>
-//     getValidate(() => {
-//       "pourt";
-//     }),
-//   5000
-// );
