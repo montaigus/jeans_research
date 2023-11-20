@@ -1,5 +1,5 @@
 import express from "express";
-import request from "request";
+//import request from "request";
 
 const app = express();
 const port = 3000;
@@ -12,9 +12,14 @@ await app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
 
-function getToken(callback) {
+async function main() {
+  const token = await getToken();
+  getValidate(token);
+  getModo(token);
+}
+
+async function getToken() {
   const clientServerOptions = {
-    uri: "https://id.twitch.tv/oauth2/token",
     body: JSON.stringify({
       client_id: "dkli55f6f0gijol1iaiyrhn1b9n3em",
       client_secret: "ghpzra5yx9rxfs44xenr8nd6l9brdq",
@@ -25,58 +30,60 @@ function getToken(callback) {
       "Content-Type": "application/json",
     },
   };
-  request(clientServerOptions, function (error, response) {
-    if (error) console.log(error);
-    console.log(response.body);
-    callback(response.body);
-  });
+  const request = new Request(
+    "https://id.twitch.tv/oauth2/token",
+    clientServerOptions
+  );
+  const res = await fetch(request);
+  const data = await res.json();
+
+  return data.access_token;
 }
 
-let OAuthToken = "";
-getToken((body) => {
-  OAuthToken = JSON.parse(body).access_token;
-  console.log("there");
-  console.log(OAuthToken);
-  return OAuthToken;
-});
+main();
 
-function getModo(callback) {
+async function getModo(token) {
   const getOption = {
-    uri: "https://api.twitch.tv/helix/moderation/moderators?broadcaster_id=990937342",
     method: "GET",
     headers: {
       "Client-ID": "dkli55f6f0gijol1iaiyrhn1b9n3em",
-      Authorization: "Bearer " + OAuthToken,
+      Authorization: "Bearer " + token,
     },
   };
-  request(getOption, function (error, response, body) {
-    if (error) console.log(error);
-    console.log("plop");
-    console.log(response.statusCode);
-    console.log(body);
-  });
+  const request = new Request(
+    "https://api.twitch.tv/helix/moderation/moderators?broadcaster_id=990937342",
+    getOption
+  );
+
+  const res = await fetch(request);
+  const data = await res.json();
+
+  console.log(data);
 }
 
-function getValidate(callback) {
+async function getValidate(token) {
   const getOption = {
     uri: "https://id.twitch.tv/oauth2/validate",
     method: "GET",
     headers: {
-      Authorization: "Bearer " + OAuthToken,
+      Authorization: "Bearer " + token,
     },
   };
-  request(getOption, function (error, response, body) {
-    if (error) console.log(error);
-    console.log("paf");
-    console.log(response.statusCode);
-    console.log(JSON.parse(body));
-  });
+  const request = new Request(
+    "https://id.twitch.tv/oauth2/validate",
+    getOption
+  );
+
+  const res = await fetch(request);
+  const data = await res.json();
+
+  console.log(data);
 }
 
-setTimeout(
-  () =>
-    getValidate(() => {
-      "pourt";
-    }),
-  5000
-);
+// setTimeout(
+//   () =>
+//     getValidate(() => {
+//       "pourt";
+//     }),
+//   5000
+// );
