@@ -5,12 +5,19 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "vite"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@tanstack/react-query": "^5.8.6",
+    "@vitejs/plugin-react": "^4.2.0",
     "express": "^4.18.2",
-    "request": "^2.88.2"
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.20.0",
+    "request": "^2.88.2",
+    "vite": "^5.0.2"
   }
 }

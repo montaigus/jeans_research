@@ -1,25 +1,34 @@
 import express from "express";
-//import request from "request";
 
 const app = express();
 const port = 3000;
 
-app.get("/", (req, res) => {
-  res.send("Hello World!");
+// app.get("/", (req, res) => {
+//   const authorizationCode = req.query.code;
+//   main(authorizationCode);
+//   res.send("c'est fait");
+// });
+
+app.post("/authorized", (req, res) => {
+  const authorizationCode = req.query.code;
+  main(authorizationCode);
+  res.send("c'est fait");
 });
 
 await app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
 
-async function main() {
+async function main(authorizationCode) {
+  console.log("======================= start main =======================");
   const appToken = await getAppToken();
   getValidate(appToken);
   const broadcaster_id = await getIdFromPseudo("montaigus", appToken);
   console.log("broadcasterId  = " + broadcaster_id);
-  const userToken = await getUserToken();
-  getValidate(userToken);
-  getModo(broadcaster_id, userToken);
+  const userToken = await getUserToken(authorizationCode);
+  await getValidate(userToken);
+  await getModo(broadcaster_id, userToken);
+  console.log("======================== end main ========================");
 }
 
 async function getAppToken() {
@@ -28,7 +37,6 @@ async function getAppToken() {
       client_id: "dkli55f6f0gijol1iaiyrhn1b9n3em",
       client_secret: "ghpzra5yx9rxfs44xenr8nd6l9brdq",
       grant_type: "client_credentials",
-      scope: "moderation:read",
     }),
     method: "POST",
     headers: {
@@ -45,13 +53,13 @@ async function getAppToken() {
   return data.access_token;
 }
 
-async function getUserToken() {
+async function getUserToken(authorizationCode) {
   const clientServerOptions = {
     body: JSON.stringify({
       client_id: "dkli55f6f0gijol1iaiyrhn1b9n3em",
       client_secret: "ghpzra5yx9rxfs44xenr8nd6l9brdq",
       grant_type: "authorization_code",
-      code: "oi02mycb4n034ismopytn0l5b1t0vl",
+      code: authorizationCode,
       redirect_uri: "http://localhost:3000",
     }),
     method: "POST",
@@ -84,8 +92,6 @@ async function getIdFromPseudo(pseudo, token) {
   );
   const res = await fetch(request);
   const jres = await res.json();
-  console.log("getIdFromPseudo :");
-  console.log(jres.data);
   return jres.data[0].id;
 }
 
@@ -128,5 +134,3 @@ async function getValidate(token) {
   console.log("Validate :");
   console.log(data);
 }
-
-main();
