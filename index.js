@@ -13,13 +13,16 @@ await app.listen(port, () => {
 });
 
 async function main() {
-  const token = await getToken();
-  getValidate(token);
-  getModo(token, "mezkar");
-  getIdFromPseudo("mezkar", token);
+  const appToken = await getAppToken();
+  getValidate(appToken);
+  const broadcaster_id = await getIdFromPseudo("montaigus", appToken);
+  console.log("broadcasterId  = " + broadcaster_id);
+  const userToken = await getUserToken();
+  getValidate(userToken);
+  getModo(broadcaster_id, userToken);
 }
 
-async function getToken() {
+async function getAppToken() {
   const clientServerOptions = {
     body: JSON.stringify({
       client_id: "dkli55f6f0gijol1iaiyrhn1b9n3em",
@@ -42,7 +45,29 @@ async function getToken() {
   return data.access_token;
 }
 
-main();
+async function getUserToken() {
+  const clientServerOptions = {
+    body: JSON.stringify({
+      client_id: "dkli55f6f0gijol1iaiyrhn1b9n3em",
+      client_secret: "ghpzra5yx9rxfs44xenr8nd6l9brdq",
+      grant_type: "authorization_code",
+      code: "oi02mycb4n034ismopytn0l5b1t0vl",
+      redirect_uri: "http://localhost:3000",
+    }),
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  };
+  const request = new Request(
+    "https://id.twitch.tv/oauth2/token",
+    clientServerOptions
+  );
+  const res = await fetch(request);
+  const data = await res.json();
+
+  return data.access_token;
+}
 
 async function getIdFromPseudo(pseudo, token) {
   const clientServerOptions = {
@@ -58,19 +83,20 @@ async function getIdFromPseudo(pseudo, token) {
     clientServerOptions
   );
   const res = await fetch(request);
-  const data = await res.json();
-  return data.id;
+  const jres = await res.json();
+  console.log("getIdFromPseudo :");
+  console.log(jres.data);
+  return jres.data[0].id;
 }
 
-async function getModo(token, pseudo) {
+async function getModo(broadcaster_id, userToken) {
   const getOption = {
     method: "GET",
     headers: {
       "Client-ID": "dkli55f6f0gijol1iaiyrhn1b9n3em",
-      Authorization: "Bearer " + token,
+      Authorization: "Bearer " + userToken,
     },
   };
-  const broadcaster_id = await getIdFromPseudo(pseudo, token);
   const request = new Request(
     "https://api.twitch.tv/helix/moderation/moderators?broadcaster_id=" +
       broadcaster_id,
@@ -79,7 +105,7 @@ async function getModo(token, pseudo) {
 
   const res = await fetch(request);
   const data = await res.json();
-
+  console.log("getModo :");
   console.log(data);
 }
 
@@ -99,5 +125,8 @@ async function getValidate(token) {
   const res = await fetch(request);
   const data = await res.json();
 
+  console.log("Validate :");
   console.log(data);
 }
+
+main();
