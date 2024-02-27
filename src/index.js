@@ -1,16 +1,20 @@
 import express from "express";
+import cors from "cors";
+import bodyParser from "body-parser";
 
 const app = express();
 const port = 3000;
 
-// app.get("/", (req, res) => {
-//   const authorizationCode = req.query.code;
-//   main(authorizationCode);
-//   res.send("c'est fait");
-// });
+const client_secret = "42hdibb7abrbtihi5v3vcpcylosirn";
+const client_id = "dkli55f6f0gijol1iaiyrhn1b9n3em";
+
+app.use(cors());
+// Utilisation de body-parser pour analyser les corps des requêtes
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
 app.post("/authorized", (req, res) => {
-  const authorizationCode = req.query.code;
+  const authorizationCode = req.body.code;
   main(authorizationCode);
   res.send("c'est fait");
 });
@@ -34,8 +38,8 @@ async function main(authorizationCode) {
 async function getAppToken() {
   const clientServerOptions = {
     body: JSON.stringify({
-      client_id: "dkli55f6f0gijol1iaiyrhn1b9n3em",
-      client_secret: "ghpzra5yx9rxfs44xenr8nd6l9brdq",
+      client_id: client_id,
+      client_secret: client_secret,
       grant_type: "client_credentials",
     }),
     method: "POST",
@@ -56,8 +60,8 @@ async function getAppToken() {
 async function getUserToken(authorizationCode) {
   const clientServerOptions = {
     body: JSON.stringify({
-      client_id: "dkli55f6f0gijol1iaiyrhn1b9n3em",
-      client_secret: "ghpzra5yx9rxfs44xenr8nd6l9brdq",
+      client_id: client_id,
+      client_secret: client_secret,
       grant_type: "authorization_code",
       code: authorizationCode,
       redirect_uri: "http://localhost:3000",
@@ -83,7 +87,7 @@ async function getIdFromPseudo(pseudo, token) {
     headers: {
       "Content-Type": "application/json",
       Authorization: "Bearer " + token,
-      "Client-ID": "dkli55f6f0gijol1iaiyrhn1b9n3em",
+      "Client-ID": client_id,
     },
   };
   const request = new Request(
@@ -99,7 +103,7 @@ async function getModo(broadcaster_id, userToken) {
   const getOption = {
     method: "GET",
     headers: {
-      "Client-ID": "dkli55f6f0gijol1iaiyrhn1b9n3em",
+      "Client-ID": client_id,
       Authorization: "Bearer " + userToken,
     },
   };

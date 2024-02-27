@@ -60,7 +60,7 @@ const MainElement = (props) => {
   );
 };
 
-function sendCodeToServer(code) {
+async function sendCodeToServer(code) {
   const serverUrl = "http://localhost:3000/authorized";
 
   // Données à envoyer dans la requête POST
@@ -75,16 +75,18 @@ function sendCodeToServer(code) {
     body: JSON.stringify(data),
   };
 
-  // Effectuer la requête
-  fetch(serverUrl, options)
-    .then((response) => response.json())
-    .then((data) => {
-      // Traitez la réponse du serveur si nécessaire
-      console.log("Réponse du serveur :", data);
-    })
-    .catch((error) => {
-      console.error("Erreur lors de la requête POST :", error);
-    });
+  try {
+    const response = await fetch(serverUrl, options);
+
+    if (!response.ok) {
+      throw new Error(`Erreur HTTP! Statut : ${response.status}`);
+    }
+
+    const responseData = await response.json();
+    console.log("Réponse du serveur :", responseData);
+  } catch (error) {
+    console.error("Erreur lors de la requête POST :", error.message);
+  }
 }
 
 const container = document.getElementById("page");
