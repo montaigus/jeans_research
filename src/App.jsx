@@ -4,15 +4,6 @@ import {
   QueryClientProvider,
   useQuery,
 } from "@tanstack/react-query";
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  useParams,
-  useLoaderData,
-  useLocation,
-} from "react-router-dom";
-import { Querystring } from "request/lib/querystring";
 
 const App = () => {
   const queryClient = new QueryClient({
