@@ -1,12 +1,13 @@
 import express from "express";
 import cors from "cors";
 import bodyParser from "body-parser";
+import { config } from "dotenv";
 
 const app = express();
 const port = 3000;
 
-const client_secret = "42hdibb7abrbtihi5v3vcpcylosirn";
-const client_id = "dkli55f6f0gijol1iaiyrhn1b9n3em";
+const client_secret = process.env.CLIENT_SECRET;
+const client_id = process.env.CLIENT_ID;
 
 app.use(cors());
 // Utilisation de body-parser pour analyser les corps des requêtes
@@ -27,7 +28,7 @@ async function main(authorizationCode) {
   console.log("======================= start main =======================");
   const appToken = await getAppToken();
   getValidate(appToken);
-  const broadcaster_id = await getIdFromPseudo("montaigus", appToken);
+  const broadcaster_id = await getIdFromPseudo("Tellyun", appToken);
   console.log("broadcasterId  = " + broadcaster_id);
   const userToken = await getUserToken(authorizationCode);
   await getValidate(userToken);
@@ -108,8 +109,7 @@ async function getModo(broadcaster_id, userToken) {
     },
   };
   const request = new Request(
-    "https://api.twitch.tv/helix/moderation/moderators?broadcaster_id=" +
-      broadcaster_id,
+    "https://api.twitch.tv/helix/videos?user_id=" + broadcaster_id,
     getOption
   );
 
