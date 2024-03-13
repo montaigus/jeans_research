@@ -1,10 +1,11 @@
 import express from "express";
 import cors from "cors";
 import bodyParser from "body-parser";
-import { config } from "dotenv";
+import dotenv from "dotenv";
 
 const app = express();
 const port = 3000;
+dotenv.config({ path: "config.env" });
 
 const client_secret = process.env.CLIENT_SECRET;
 const client_id = process.env.CLIENT_ID;
@@ -28,7 +29,7 @@ async function main(authorizationCode) {
   console.log("======================= start main =======================");
   const appToken = await getAppToken();
   getValidate(appToken);
-  const broadcaster_id = await getIdFromPseudo("Tellyun", appToken);
+  const broadcaster_id = await getIdFromPseudo("montaigus", appToken);
   console.log("broadcasterId  = " + broadcaster_id);
   const userToken = await getUserToken(authorizationCode);
   await getValidate(userToken);
@@ -97,6 +98,7 @@ async function getIdFromPseudo(pseudo, token) {
   );
   const res = await fetch(request);
   const jres = await res.json();
+  console.log(jres);
   return jres.data[0].id;
 }
 
