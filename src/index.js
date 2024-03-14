@@ -3,6 +3,8 @@ import cors from "cors";
 import bodyParser from "body-parser";
 import dotenv from "dotenv";
 
+import WebSocket from "ws";
+
 const app = express();
 const port = 3000;
 dotenv.config({ path: "config.env" });
@@ -21,7 +23,7 @@ app.post("/authorized", (req, res) => {
   res.send("c'est fait");
 });
 
-await app.listen(port, () => {
+const server = await app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
 
@@ -33,7 +35,25 @@ async function main(authorizationCode) {
   console.log("broadcasterId  = " + broadcaster_id);
   const userToken = await getUserToken(authorizationCode);
   await getValidate(userToken);
-  await getModo(broadcaster_id, userToken);
+  //await getModo(broadcaster_id, userToken);
+  console.log("début du websocket");
+
+  // Connexion au chat Twitch via WebSocket
+  const chatWebSocketUrl = `wss://irc-ws.chat.twitch.tv`;
+  const ws = new WebSocket(chatWebSocketUrl);
+
+  ws.on("open", () => {
+    console.log("Connected to Twitch Chat WebSocket");
+    ws.send(`PASS oauth:${userToken}`);
+    ws.send(`NICK blabla`); // Utilisez un nom d'utilisateur anonyme
+    ws.send(`JOIN #${broadcaster_id}`); // Joindre le canal spécifique
+  });
+
+  ws.on("message", (data) => {
+    console.log(`Received message from Twitch Chat WebSocket: ${data}`);
+    // Traitement des messages du chat ici
+  });
+
   console.log("======================== end main ========================");
 }
 
