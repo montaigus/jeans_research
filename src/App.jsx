@@ -4,6 +4,7 @@ import {
   QueryClientProvider,
   useQuery,
 } from "@tanstack/react-query";
+import { ChatClient } from "@twurple/chat";
 
 const App = () => {
   const queryClient = new QueryClient({
@@ -41,7 +42,7 @@ const MainElement = (props) => {
         <p>merci !</p>
       ) : (
         <a
-          href="https://id.twitch.tv/oauth2/authorize?response_type=code&client_id=dkli55f6f0gijol1iaiyrhn1b9n3em&redirect_uri=http://localhost:5173&scope=moderation:read"
+          href="https://id.twitch.tv/oauth2/authorize?response_type=code&client_id=dkli55f6f0gijol1iaiyrhn1b9n3em&redirect_uri=http://localhost:5173&scope=chat:read"
           className="link_connect"
         >
           Authoriser l'application
@@ -50,6 +51,32 @@ const MainElement = (props) => {
     </>
   );
 };
+
+main();
+
+async function main() {
+  console.log("======================= start main =======================");
+  // const authProvider = new Anonym();
+  const bot = new ChatClient({
+    channels: ["Tonton"],
+    readOnly: true,
+  });
+  await bot.connect();
+  console.log("connecté au chat de Tonton");
+  bot.onMessage((channel, user, message, msg) => {
+    console.log(`msg id : ${msg.id} user : ${user}: ${message}`);
+  });
+
+  bot.onBan((channel, user, msg) => {
+    console.log(
+      `Cet utilisateur a été ban : ${user}, pour le message suivant : ${msg.isResponseTo}`
+    );
+  });
+
+  bot.onMessageRemove((channel, user, msg) => {
+    console.log(`Le message de ${user} a été modéré : ${msg.params.message}`);
+  });
+}
 
 async function sendCodeToServer(code) {
   const serverUrl = "http://localhost:3000/authorized";
