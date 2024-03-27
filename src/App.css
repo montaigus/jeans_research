@@ -1,0 +1,9 @@
+.chat_holder {
+  border: 1px black;
+  background-color: darkslategray;
+  height: 50px;
+}
+
+.new_message {
+  color: white;
+}
