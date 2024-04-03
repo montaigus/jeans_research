@@ -1,13 +1,13 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { ChatMessagesProvider } from "./ChatMessagesProvider";
 import App from "./App";
 
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       staleTime: Infinity,
+      cacheTime: Infinity,
     },
   },
 });
@@ -18,9 +18,7 @@ const root = createRoot(container); // createRoot(container!) if you use TypeScr
 root.render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
-      <ChatMessagesProvider>
-        <App />
-      </ChatMessagesProvider>
+      <App />
     </QueryClientProvider>
   </React.StrictMode>
 );
