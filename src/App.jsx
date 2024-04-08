@@ -10,35 +10,14 @@ const App = () => {
 
   useQueryClient();
 
-  // const WS_URL = "ws://localhost:3000";
-
-  // useWebSocket(WS_URL, {
-  //   onOpen: () => {
-  //     console.log("WebSocket connection established.");
-  //   },
-  // });
-
   const queryKeyChat = ["chat"];
   const queryKeyRemoved = ["removed"];
+
   const queryResultChat = useQuery({
     queryKey: queryKeyChat,
     queryFn: getChat,
+    refetchInterval: 1000,
   });
-
-  //pour ne rafraichir que quand on est focus
-  let timeToMakeNewRequest = 0;
-  // async function rafTimer(time) {
-  //   if (timeToMakeNewRequest <= time) {
-  //     queryClient.invalidateQueries(queryKey);
-  //     timeToMakeNewRequest = time + 1000;
-  //   }
-  //   requestAnimationFrame(rafTimer);
-  // }
-  // requestAnimationFrame(rafTimer);
-
-  // setTimeout(() => {
-  //   queryClient.invalidateQueries(queryKey);
-  // }, 1000);
 
   const queryResultRemoved = useQuery({
     queryKey: queryKeyRemoved,
@@ -102,29 +81,6 @@ const App = () => {
       });
   }
 
-  function handleDownload() {
-    fetch(`http://localhost:3000/download-json?channel=${channel}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Erreur lors de la requête");
-        }
-        return response.json();
-      })
-      .then((data) => {
-        console.log(data); // Affiche la réponse du serveur dans la console
-        // Faire quelque chose avec la réponse du serveur si nécessaire
-      })
-      .catch((error) => {
-        console.error("Erreur:", error);
-        // Gérer l'erreur ici
-      });
-  }
-
   return (
     <>
       <div className="header">Les recherches de Jean</div>
@@ -146,7 +102,6 @@ const App = () => {
             Se déconnecter
           </button>
         )}
-        {connected && <button className="button_record">Enregistrer</button>}
         {connected && (
           <a
             className="button_download"
@@ -161,29 +116,24 @@ const App = () => {
             <div className="message">Rien à afficher</div>
           )}
           {queryResultChat.data &&
-            queryResultChat.data
-              // .filter((entrie) => {
-              //   entrie.channel == "alexclick";
-              // })
-              .map((msg) => (
-                <div className="message">{`${msg.data.user} : ${msg.data.message}`}</div>
-              ))}
+            queryResultChat.data.map((msg) => (
+              <div
+                className="message"
+                key={msg.data.id}
+              >{`${msg.data.user} : ${msg.data.message}`}</div>
+            ))}
         </div>
         <div className="removed_holder">
           {!queryResultRemoved.data && (
             <div className="message">Rien à afficher</div>
           )}
           {queryResultRemoved.data &&
-            queryResultRemoved.data
-              // .filter((entrie) => {
-              //   entrie.channel == "alexclick";
-              // })
-              .map((msg) => (
-                <div
-                  className="message"
-                  id={msg.data.id}
-                >{`${msg.data.user} : ${msg.data.message}`}</div>
-              ))}
+            queryResultRemoved.data.map((msg) => (
+              <div
+                className="message"
+                key={msg.data.id}
+              >{`${msg.data.user} : ${msg.data.message}`}</div>
+            ))}
         </div>
       </div>
     </>

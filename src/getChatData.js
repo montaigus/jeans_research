@@ -14,8 +14,5 @@ export async function getRemoved({ queryKey }) {
     //throw new console.error("not ok");
   }
 
-  // setTimeout(() => {
-  //   queryClient.invalidateQueries(queryKey);
-  // }, 10000);
   return apiRes.json();
 }

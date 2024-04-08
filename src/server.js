@@ -19,16 +19,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 let chatMsg = [];
-let banMsg = [
-  {
-    channel: "essai",
-    data: {
-      id: 0,
-      message: "pas de message",
-      date: new Date().toLocaleDateString(),
-    },
-  },
-];
+let banMsg = [];
 
 io.on("connection", (ws) => {
   console.log("Client connected");
@@ -87,8 +78,8 @@ async function connectChat(channel) {
   });
 
   bot.onMessageRemove((channel, messageId, msg) => {
-    const removedMsg = chatMsg.find((msg) => {
-      msg.data.id === messageId;
+    const removedMsg = chatMsg.find((c) => {
+      c.data.id === messageId;
     });
     console.log("\x1b[31m%s\x1b[0m", "message banni " + removedMsg);
     banMsg.push({
@@ -178,10 +169,8 @@ app.get("/download-json", (req, res) => {
   fs.writeFile("./temp/temp.json", jsonData, (err) => {
     if (err) throw err;
 
-    const date = new Date().toLocaleDateString();
-    console.log(date);
-    //! la date avec les / ça marche pas dans le nom
-    const fileName = `msgData_${channel}_${date}`;
+    const date = new Date().toLocaleDateString().replaceAll("/", "_");
+    const fileName = `msgData_${channel}_${date}.json`;
 
     // Envoyer le fichier au client en tant que téléchargement
     res.download("./temp/temp.json", fileName + ".json", (err) => {
