@@ -8,6 +8,11 @@ const App = () => {
   const [msg, setMsg] = useState("Pas de message");
   const [connected, setConnected] = useState(false);
 
+  const serverUrl =
+    process.env.NODE_ENV === "production"
+      ? "http://jeans-research.vercel.app:3000"
+      : "http://localhost:3000";
+
   useQueryClient();
 
   const queryKeyChat = ["chat"];
@@ -32,7 +37,7 @@ const App = () => {
   }
 
   function handleConnect() {
-    fetch("http://localhost:3000/connect", {
+    fetch(serverUrl + "/connect", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -57,7 +62,7 @@ const App = () => {
   }
 
   function handleDisconnect() {
-    fetch("http://localhost:3000/disconnect", {
+    fetch(serverUrl + "/disconnect", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -105,7 +110,7 @@ const App = () => {
         {connected && (
           <a
             className="button_download"
-            href={`http://localhost:3000/download-json?channel=${channel}`}
+            href={`${serverUrl}/download-json?channel=${channel}`}
           >
             Télécharger
           </a>
