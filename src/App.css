@@ -1,16 +1,67 @@
-.chat_holder {
-  border: 1px black;
-  background-color: darkslategray;
-  height: 500px;
-  overflow: auto;
-}
-.removed_holder {
-  border: 1px black;
-  background-color: darkred;
-  height: 100px;
-  overflow: auto;
+:root {
+  --twitchViolet: #9146ff;
+  font-family: "Roobert", sans-serif;
 }
 
+.displayer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 40vh;
+  background-color: var(--twitchViolet);
+  margin-right: 1hv;
+}
+
+.chat_holder {
+  border: 5px solid silver;
+  background-color: whitesmoke;
+  overflow: auto;
+  color: black;
+  flex-grow: 3;
+  width: 100%;
+}
+.removed_holder {
+  color: black;
+  border: 5px solid silver;
+  background-color: rgb(161, 135, 135);
+  overflow: auto;
+  flex-grow: 1;
+  width: 100%;
+}
+
+.search_bar {
+  display: flex;
+  align-items: center;
+  height: 8vh;
+}
 .message {
   color: white;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--twitchViolet);
+  color: #fff;
+  font-family: "Twitchy", sans-serif;
+  font-size: 25px;
+  height: 50px;
+  padding-bottom: 5px;
+  border-bottom: 3px solid darkgray;
+}
+
+.title {
+  /* height: 40px;
+  margin: auto; */
+}
+
+@font-face {
+  font-family: "Twitchy";
+  src: url("./public/fonts/Twitchy.TV.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Roobert";
+  src: url("./public/fonts/RoobertRegular.ttf") format("truetype");
 }
