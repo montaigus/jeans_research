@@ -3,11 +3,11 @@
   "type": "module",
   "version": "1.0.0",
   "description": "",
-  "main": "./server/server.js",
+  "main": "./server/api/server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "vite",
-    "dev": "nodemon server/server.js --ignore 'temp/'",
+    "dev": "nodemon server/api/server.js --ignore 'temp/'",
     "build": "vite build"
   },
   "author": "",

@@ -11,13 +11,17 @@ const server = await app.listen(port, () => {
 });
 
 app.use(cors());
-app.use(cors({ origin: "http://jeans-research.vercel.app" }));
+app.use(cors({ origin: "http://jeans-research-frontend.vercel.app" }));
 // Utilisation de body-parser pour analyser les corps des requêtes
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 let chatMsg = [];
 let banMsg = [];
+
+app.get("/", (req, res) => {
+  res.send("Express on Vercel");
+});
 
 app.get("/chat", (req, res) => {
   res.json(chatMsg);
