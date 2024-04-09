@@ -4,7 +4,7 @@ import react from "@vitejs/plugin-react";
 export default defineConfig({
   plugins: [react()],
   root: "./src",
-  base: "http://jeans-research.vercel.app/",
+  base: "./",
   esbuild: {
     jsxFactory: "React.createElement",
     jsxFragment: "React.Fragment",
