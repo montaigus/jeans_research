@@ -2,8 +2,6 @@ import express from "express";
 import cors from "cors";
 import bodyParser from "body-parser";
 import { ChatClient } from "@twurple/chat";
-import WebSocket from "ws";
-import { Server } from "socket.io";
 import fs from "fs";
 
 const app = express();
@@ -11,29 +9,15 @@ const port = 3000;
 const server = await app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
-const io = new Server({ server });
 
 app.use(cors());
+app.use(cors({ origin: "*" }));
 // Utilisation de body-parser pour analyser les corps des requêtes
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 let chatMsg = [];
 let banMsg = [];
-
-io.on("connection", (ws) => {
-  console.log("Client connected");
-});
-
-io.on("disconnect", () => {
-  console.log("client disconnected");
-  if (io.clients.size === 0 && allBots.length > 0) {
-    allBots.forEach((bot) => {
-      bot.bot.quit();
-      console.log(`Bot déconnecté du canal ${bot.channel}`);
-    });
-  }
-});
 
 app.get("/chat", (req, res) => {
   res.json(chatMsg);
@@ -125,8 +109,6 @@ app.post("/connect", async (req, res) => {
       .send("Une erreur s'est produite lors de la connexion du bot");
   }
 });
-
-app.post("/record", async (req, res) => {});
 
 app.post("/disconnect", async (req, res) => {
   const channel = req.body.channel;

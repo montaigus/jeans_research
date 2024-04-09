@@ -59,9 +59,9 @@
 
 @font-face {
   font-family: "Twitchy";
-  src: url("./public/fonts/Twitchy.TV.ttf") format("truetype");
+  src: url("./fonts/Twitchy.TV.ttf") format("truetype");
 }
 @font-face {
   font-family: "Roobert";
-  src: url("./public/fonts/RoobertRegular.ttf") format("truetype");
+  src: url("./fonts/RoobertRegular.ttf") format("truetype");
 }

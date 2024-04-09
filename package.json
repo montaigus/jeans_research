@@ -7,7 +7,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "vite",
-    "dev": "nodemon src/server.js --ignore 'temp/'",
+    "dev": "nodemon server/server.js --ignore 'temp/'",
     "build": "vite build"
   },
   "author": "",
