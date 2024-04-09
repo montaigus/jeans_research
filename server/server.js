@@ -11,7 +11,7 @@ const server = await app.listen(port, () => {
 });
 
 app.use(cors());
-app.use(cors({ origin: "*" }));
+app.use(cors({ origin: "http://jeans-research.vercel.app" }));
 // Utilisation de body-parser pour analyser les corps des requêtes
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
