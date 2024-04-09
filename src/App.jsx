@@ -1,11 +1,9 @@
 import React, { useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getChat, getRemoved } from "./getChatData";
-import useWebSocket from "react-use-websocket";
 
 const App = () => {
   const [channel, setChannel] = useState("");
-  const [msg, setMsg] = useState("Pas de message");
   const [connected, setConnected] = useState(false);
 
   const serverUrl =
